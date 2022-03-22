@@ -12,7 +12,7 @@ alias grep='gre --color'            # show differences in color
 alias egrep='egrep --color=auto'    # show differences in color
 alias fgrep='fgrep --color=auto'    # show differences in color
 
-# Better Directory listing
+# Better directory listing
 alias ls='ls -hF --color=tty'                   # classify files in color
 alias ll='ls -l'
 alias la='ls -A'
