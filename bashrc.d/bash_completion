@@ -1,0 +1,9 @@
+# Source bash completion if installed
+
+# macOS 
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+# Ubuntu
+if [ -f /etc/profile.d/bash_completion ]; then
+  source /etc/profile.d/bash_completion
+fi
