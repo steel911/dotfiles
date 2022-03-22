@@ -4,18 +4,13 @@ export LC_ALL=en_US.UTF-8                                                   # Te
 export EDITOR=vim                                                           # Default editor is VIM
 
 #
-# SDK PATH 
-#
-export ANDROID_SDK_ROOT="~/Dev/android-sdk"                                 # PATH to ANDROID_SDK
-export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_ROOT/platform-tools"            # PATH to ANDROID_HOME
-export JAVA_HOME=$(/usr/libexec/java_home)                                  # PATH to JDK 11 
-
-#
 # PATH
 #
-export PATH=$PATH:$ANDROID_SDK_ROOT:$ANDROID_PLATFORM_TOOLS:$JAVA_HOME
 export PATH=.:$PATH                                                         # Avoid to append "./" every time
 
+# Piperita ColorScheme
+#
+#  Works on Mac Only #
 #
 #  COLORS
 # 

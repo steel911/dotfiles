@@ -8,13 +8,13 @@ alias vi='vim'
 # MISC
 alias less='less -r'                # raw control characters
 alias whence='type -a'              # where, of a sort
-alias grep='gre --color'            # show differences in color
+alias grep='grep --color'            # show differences in color
 alias egrep='egrep --color=auto'    # show differences in color
 alias fgrep='fgrep --color=auto'    # show differences in color
 
 # Better directory listing
 alias ls='ls -hF --color=tty'                   # classify files in color
-alias ll='ls -l'
+alias ll='ls -al'
 alias la='ls -A'
 alias l='ls -CF'
 
