@@ -50,7 +50,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'                                   " Vundle
-Plugin 'scrooloose/nerdtree'                                    " NERDTREE
+Plugin 'preservim/nerdtree'                                     " NERDTREE
 let g:NERDTreeWinSize=48
 
 Plugin 'patstockwell/vim-monokai-tasty'                         " Monokai
