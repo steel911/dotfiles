@@ -5,14 +5,19 @@ git_host="github.com"
 git_user="steel911"
 git_repo="dotfiles"
 git_url="https://${git_host}/${git_user}/"
-proxy="socks5://127.0.0.1:7890"
+PROXY="socks5://127.0.0.1:7890"
+BASH_HOME="${HOME}/.config/bash"
+VIM_HOME="${HOME}/.config/vim"
+
+# os_type: msys2, ubuntu, mac
+os_type=""
 
 # Variables for temporary files/directories.
 temp_file="$(mktemp -u)"
 temp_dir="$(mktemp -d)"
 
 # Set working directory
-export LOCAL_FONTS="${HOME}/.local/"
+export LOCAL_FONTS="${HOME}/.local/fonts"
 
 ## Colorize output.
 # shellcheck disable=SC2034
@@ -83,11 +88,8 @@ pac_install() {
     if [[ -e $(command -v sudo) ]]; then
         SUDO='sudo'
     fi
-    
+
     $SUDO pacman -Sy
-    
-    # Vim options
-    vim_gui_pkg="gvim"
 
     print_msg "Installing package dependencies..."
     $SUDO pacman -S --noconfirm "${pkg_list[@]}"
@@ -97,8 +99,10 @@ deb_install() {
     print_msg "Updating package database..."
     sudo apt update
 
-    # Vim options
-    vim_gui_pkg="vim-gtk3"
+    # For GUI using vim-gtk3 instead, add clipboard support
+    if [[ -e $(command -v Xorg) || -e $(command -v startx) ]]; then
+        pkg_list=("${pkg_list[@]/vim/vim-gtk3}")
+    fi
 
     print_msg "Installing package dependencies..."
     sudo apt install --yes "${pkg_list[@]}"
@@ -106,18 +110,18 @@ deb_install() {
 
 brew_install() {
     print_msg "Update package database..."
-    
+
     # Xcode
     if ! command -v xcode-select -p &> /dev/null
     then
-        print_error "Xcode must be intalled, run xcode-select --install"   
+        print_error "Xcode must be intalled, run xcode-select --install"
         xcode-select --install
     else
         print_msg "Xcode already installed"
     fi
 
     # homebrew
-    if ! command -v /opt/homebrew/bin/brew &> /dev/null 
+    if ! command -v /opt/homebrew/bin/brew &> /dev/null
     then
         echo 'brew must be installed! (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")'
     else
@@ -125,12 +129,12 @@ brew_install() {
         /opt/homebrew/bin/brew update
         /opt/homebrew/bin/brew doctor
     fi
-   
+
     print_msg "Installing brew packages..."
     /opt/homebrew/bin/brew bundle install --file ~/Brewfile
 }
 
-install_pkgs() {
+detect_os() {
     # Operating system identification. For more information, see
     # https://www.freedesktop.org/software/systemd/man/os-release.html
     if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
@@ -138,64 +142,175 @@ install_pkgs() {
         [ -f "/etc/os-release" ] && source /etc/os-release
         case "${NAME}" in
             *Ubuntu*)
-                print_msg "OS identified as '$NAME'";
-                deb_install
+                print_msg "OS identified as '$NAME'"
+                os_type="ubuntu"
                 ;;
             *)
-                print_error "Unable to identify operating system! Could not install packages...";
+                print_error "Ubuntu only!";
                 exit 1
                 ;;
         esac
     elif [[ "${OSTYPE}" == "darwin"* ]]; then
-        brew_install
-    elif [[ "${OSTYPE}" == "msys" ]]; then
-        pac_install
+        print_msg "OS identified as Mac"
+        os_type="mac"
+    elif [[ "${OSTYPE}" == "msys"* ]]; then
+        print_msg "OS identified as PC w/ MSYS2"
+        os_type="msys2"
     else
-        print_error "Unsupported operating system! Could not install packages..."
+        print_error "Unsupported OS!!!"
         exit 1
     fi
 }
 
+install_pkgs() {
+    if [[ -z "${os_type}" ]]; then
+        detect_os
+    fi
+
+    case "${os_type}" in
+        ("msys2")   pac_install     ;;
+        ("ubuntu")  deb_install     ;;
+        ("mac")     brew_install    ;;
+        (*)
+            print_error "Unsupported OS!!!"
+            exit 1
+            ;;
+    esac
+
+}
+
 bash_options() {
     echo -e "${yellow}Options for bash installation.${no_color}" >&1
-    echo -e "${yellow}  1)${white} Basic. Install standard Vim package.${no_color}" >&1
-    echo -e "${yellow}  2)${white} GUI. Install Vim with GTK3 GUI.${no_color}" >&1
+    echo -e "${yellow}None by default.${no_color}" >&1
     echo
 }
 
+link_bash_config() {
+    print_msg "linking bash configurations... "
+
+    # Basic
+    ln -sf "${BASH_HOME}/bashrc"            "${HOME}/.bashrc"
+    ln -sf "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
+
+    print_msg "Make sure ~/.bashrc.d exists."
+    mkdir -p ~/.bashrc.d
+
+    # Detailed
+    ln -sf "${BASH_HOME}/bashrc.d/bash_aliases"                 "${HOME}/.bashrc.d/bash_aliases"
+    ln -sf "${BASH_HOME}/bashrc.d/bash_completion"              "${HOME}/.bashrc.d/bash_completion"
+    ln -sf "${BASH_HOME}/bashrc.d/bash_colorscheme_piperita"    "${HOME}/.bashr.d/bash_colorschme_piperita"
+    ln -sf "${BASH_HOME}/bashrc.d/bash_proxy"                   "${HOME}/.bashrc.d/bash_proxy"
+
+    case "${os_type}" in
+        ("ubuntu")
+            ln -sf "${BASH_HOME}/bashrc.d/bash_export_ubuntu"   "${HOME}/.bashrc.d/bash_export" ;;
+        ("mac")
+            ln -sf "${BASH_HOME}/bashrc.d/bash_export_mac"      "${HOME}/.bashrc.d/bash_export" ;;
+        (*)
+                print_error "Unsupported OS!!!"
+                exit 1
+            ;;
+    esac
+    print_msg "linking bash configurations... DONE"
+
+}
+
+copy_bash_config() {
+    print_msg "Copying bash configurations... "
+
+    # Basic
+    cp -sf "${BASH_HOME}/bashrc"            "${HOME}/.bashrc"
+    cp -sf "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
+
+    print_msg "Make sure ~/.bashrc.d exists."
+    mkdir -p ~/.bashrc.d
+
+    # Detailed
+    cp "${BASH_HOME}/bashrc.d/bash_aliases"                     "${HOME}/.bashrc.d/bash_aliases"
+    cp "${BASH_HOME}/bashrc.d/bash_completion"                  "${HOME}/.bashrc.d/bash_completion"
+    cp "${BASH_HOME}/bashrc.d/bash_colorscheme_piperita"        "${HOME}/.bashrc.d/bash_colorschme_piperita"
+    cp "${BASH_HOME}/bashrc.d/bash_proxy"                       "${HOME}/.bashrc.d/bash_proxy"
+
+    case "${os_type}" in
+        ("msys2")
+            cp "${BASH_HOME}/bashrc.d/bash_export_msys2"        "${HOME}/.bashrc.d/bash_export" ;;
+        ("ubuntu")
+            cp "${BASH_HOME}/bashrc.d/bash_export_ubuntu"       "${HOME}/.bashrc.d/bash_export" ;;
+        ("mac")
+            cp "${BASH_HOME}/bashrc.d/bash_export_mac"          "${HOME}/.bashrc.d/bash_export" ;;
+        (*)
+            print_error "Unsupported OS!!!"
+            exit 1
+            ;;
+    esac
+    print_msg "Copying bash configurations... DONE"
+
+}
+
 install_bash() {
-    echo ""    
+    bash_options
+
+    if [[ -z "${os_type}" ]]; then
+        detect_os
+    fi
+
+    # Symlink inside MS Windows is buggy, using copy instead
+    case "${os_type}" in
+        ("msys2")
+            copy_bash_config
+            ;;
+        (*)
+            link_bash_config
+            ;;
+    esac
+
+    source ~/.bash_profile
 }
 
 vim_options() {
     echo -e "${yellow}Options for Vim installation.${no_color}" >&1
-    echo -e "${yellow}  1)${white} Basic. Install standard Vim package.${no_color}" >&1
-    echo -e "${yellow}  2)${white} GUI. Install Vim with GTK3 GUI.${no_color}" >&1
-    echo
+    echo -e "${yellow}None by default.${no_color}" >&1
 }
 
-# Specific for GUI Vim
-install_vim() {
-    # Check if Xorg display server is installed. If true, offer Vim installation
-    # options.
-    if [[ -e $(command -v Xorg) || -e $(command -v startx) ]]; then
-        vim_options
+link_vim_config() {
+    print_msg "Linking vim configurations..."
+    ln -sf "${VIM_HOME}/vimrc"            "${HOME}/.vimrc"
 
-        while [ -z "${vim_option}" ]; do
-            echo -en "${white}  Option${yellow} [1/2]${white}: ${no_color}"
-            read -r opt
-            echo
-            case "${opt}" in
-                [1]*) vim_option=1 ;;
-                [2]*) vim_option=2 ;;
-                *) echo -e "Invalid option '${opt}'." >&2; vim_options ;;
-            esac
-        done
-        if [[ "${vim_option}" = 2 ]]; then
-            # Replace standard Vim package with GTK3 GUI version.
-            pkg_list=("${pkg_list[@]/vim/$vim_gui_pkg}")
-        fi
+    print_msg "Make sure ~/.vim exists."
+    mkdir -p "${HOME}/.vim"
+}
+
+copy_vim_config() {
+    print_msg "Copying vim configurations..."
+    cp "${VIM_HOME}/vimrc"              "${HOME}/.vimrc"
+
+    print_msg "Make sure ~/.vim exists."
+    mkdir -p "${HOME}/.vim"
+}
+
+install_vim() {
+    vim_options
+
+    if [[ -z "${os_type}" ]]; then
+        detect_os
     fi
+
+    case "${os_type}" in
+        ("msys2")
+            copy_vim_config
+            ;;
+        (*)
+            link_vim_config
+            ;;
+    esac
+
+    print_msg "Downloading Vim Vundle, into ~/.vim/bundle/Vundle.vim"
+    vim_vundle_src="https://github.com/VundleVim/Vundle.vim.git"
+    vim_vundle_dst="${HOME}/.vim/bundle/Vundle.vim"
+    git clone "${vim_vundle_src}" "${vim_vundle_dst}"
+
+    print_msg "Install all vim plugins..."
+    vim +PluginInstall +qall
 }
 
 font_options() {
@@ -215,11 +330,11 @@ install_fonts() {
         read -r opt
         echo
         case "${opt}" in
-            [1]*    ) 
+            [1]*    )
                 font_option=1 ;;
             [2]*    )
                 font_option=2 ;;
-            *       ) 
+            *       )
                 echo -e "Invalid option '${opt}'." >&2; \
                 font_options ;;
         esac
@@ -231,44 +346,86 @@ install_fonts() {
     fi
 
     if [[ "${font_option}" -eq 2  ]]; then
+        # make sure local font dir is ready.
+        mkdir -p ~/.local/fonts
+
         print_msg "Downloading SpaceMono fonts..."
         font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/SpaceMono.zip"
-        curl -fLo "${temp_file}" "${font_dl_url}" --proxy $proxy
+        curl -fLo "${temp_file}" "${font_dl_url}" --proxy $PROXY
         unzip -j "${temp_file}" "*FontMono*" -d "${temp_dir}"
-        cp "${temp_dir}"/*.ttf $LOCAL_FONTS
+        cp "${temp_dir}"/*.ttf $LOCAL_FONT
 
-        print_msg "Dowloading JetBrainsMono fonts..." 
-        font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
-        curl -fLo "${temp_file}" "${font_dl_url}" --proxy $proxy
-        unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
-        cp "${temp_dir}"/*.ttf $LOCAL_FONTS
+        # print_msg "Dowloading JetBrainsMono fonts..."
+        # font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
+        # curl -fLo "${temp_file}" "${font_dl_url}" --proxy $PROXY
+        # unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
+        # cp "${temp_dir}"/*.ttf $LOCAL_FONTS
         return 0
     fi
 }
 
+git_options() {
+    git config --global user.email "zjj3065@gmail.com"
+    git config --global user.name "steelz"
+}
+
 cleanup_home() {
-    echo ""
+    # Array for common dotfiles.
+    dotfiles=(
+        ".profile"
+        ".bash_history"
+        ".bash_logout"
+        ".bash_profile"
+        ".bashrc"
+        ".bashrc.d"
+        ".gitconfig"
+        ".vimrc"
+        ".vim"
+        ".viminfo"
+        ".wget-hsts"
+        ".lesshst"
+    )
+
+    found=0 # Set to 1 if file found in the for loop.
+    # Find any pre-esisting dotfiles.
+    for file in "${dotfiles[@]}"; do
+        if [ -e "${HOME}/${file}" ]; then
+            found=1; break
+        fi
+    done
+    # If true, offer to cleanup home directory.
+    if [ "${found}" = 1 ]; then
+        cleanup_options
+        while [ -z "${cleanup_option}" ]; do
+            echo -en "${white}  Option${yellow} [y/n]${white}: ${no_color}"
+            read -r opt
+            echo
+            case "${opt}" in
+                [y]|[Y]*) cleanup_option=1 ;;
+                [n]|[N]*) cleanup_option=2 ;;
+                *) echo -e "Invalid option '${opt}'." >&2; cleanup_options ;;
+            esac
+        done
+        if [ "${cleanup_option}" = 1 ]; then
+            print_msg "Cleaning home directory..."
+            # Cleanup user's home directory.
+            for file in "${dotfiles[@]}"; do
+                [ -e "${HOME}/${file}" ] && rm -ri "${HOME:?}/${file}"
+            done
+        fi
+    fi
 }
-
-update_yadm_repo() {
-    echo ""
-}
-
-cleanup_tmp() {
-    echo ""
-}
-
-
-
 
 # MAIN     ################################################
 print_header
 
 # HOME
 cd "$HOME"
-install_fonts
-# 1. powerline-fonts @ .local/fonts
-# 2. vim-vundle      @ .vim/bundle
+# cleanup_home
+# install_pkgs
+# install_bash
+# install_fonts
+install_vim
+
 
 print_footer
-

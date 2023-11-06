@@ -1,0 +1,12 @@
+#
+# BASH ENV
+#
+export LC_ALL=en_US.UTF-8                                                   # Text Encoding
+export EDITOR=vim                                                           # Default editor is VIM
+export LESSHISTFILE=-                                                       # Disable less history file
+
+#
+# PATH
+#
+export PATH=$PATH:$ANDROID_PLATFORM_TOOLS:$JAVA_HOME:$VSCODE:$WINDOWS_GIT
+export PATH=.:$PATH                                                         # Avoid to append "./" every time

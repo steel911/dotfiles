@@ -1,0 +1,12 @@
+[http]
+    proxy = socks5://127.0.0.1:7890
+[https]
+    proxy = socks5://127.0.0.1:7890
+[user]
+	name = steel911
+	email = zjj3065@gmail.com
+[init]
+	defaultBranch = main
+[safe]
+    directory = *
+[core]

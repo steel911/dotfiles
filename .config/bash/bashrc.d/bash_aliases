@@ -17,4 +17,3 @@ alias ls='ls -hF --color=tty'                   # classify files in color
 alias ll='ls -al'
 alias la='ls -A'
 alias l='ls -CF'
-

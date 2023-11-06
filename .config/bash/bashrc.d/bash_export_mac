@@ -1,0 +1,21 @@
+#
+# BASH ENV
+#
+export LC_ALL=en_US.UTF-8                                                   # Text Encoding
+export EDITOR=vim                                                           # Default editor is VIM
+export LESSHISTFILE=-                                                       # Disable less history file
+
+#
+# PATH
+#
+export PATH=$PATH:$ANDROID_PLATFORM_TOOLS:$JAVA_HOME:$VSCODE:$WINDOWS_GIT
+export PATH=.:$PATH                                                         # Avoid to append "./" every time
+
+# Homebrew Tsinghua Repo
+#
+# Mac ONLY
+#
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+
