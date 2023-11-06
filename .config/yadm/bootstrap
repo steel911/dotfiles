@@ -5,6 +5,7 @@ git_host="github.com"
 git_user="steel911"
 git_repo="dotfiles"
 git_url="https://${git_host}/${git_user}/"
+proxy="socks5://127.0.0.1:7890"
 
 # Variables for temporary files/directories.
 temp_file="$(mktemp -u)"
@@ -232,13 +233,13 @@ install_fonts() {
     if [[ "${font_option}" -eq 2  ]]; then
         print_msg "Downloading SpaceMono fonts..."
         font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/SpaceMono.zip"
-        curl -fLo "${temp_file}" "${font_dl_url}" --progress-bar
+        curl -fLo "${temp_file}" "${font_dl_url}" --proxy $proxy
         unzip -j "${temp_file}" "*FontMono*" -d "${temp_dir}"
         cp "${temp_dir}"/*.ttf $LOCAL_FONTS
 
         print_msg "Dowloading JetBrainsMono fonts..." 
         font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
-        curl -fLo "${temp_file}" "${font_dl_url}" --progress-bar
+        curl -fLo "${temp_file}" "${font_dl_url}" --proxy $proxy
         unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
         cp "${temp_dir}"/*.ttf $LOCAL_FONTS
         return 0

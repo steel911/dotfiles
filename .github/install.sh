@@ -7,7 +7,10 @@
 mkdir -p ~/.local/bin
 
 # Download yadm - yet another dotfile manager
-curl -sfLo ~/.local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+curl \
+    --proxy "socks5://127.0.0.1:7890"   \
+    -sfLo ~/.local/bin/yadm             \
+    https://github.com/TheLocehiliosan/yadm/raw/master/yadm
 
 # +Execute permission
 chmod u+x ~/.local/bin/yadm
