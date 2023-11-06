@@ -11,7 +11,7 @@ temp_file="$(mktemp -u)"
 temp_dir="$(mktemp -d)"
 
 # Set working directory
-export LOCAL_DATA_HOME="${HOME}/.local/share"
+export LOCAL_FONTS="${HOME}/.local/"
 
 ## Colorize output.
 # shellcheck disable=SC2034
@@ -32,6 +32,7 @@ pkg_list=(
     "git"
     "vim"
     "curl"
+    "wget"
     "tree"
     "unzip"
 )
@@ -106,7 +107,8 @@ brew_install() {
     print_msg "Update package database..."
     
     # Xcode
-    if [[ ! command -v xcode-select -p &> /dev/null ]]; then
+    if ! command -v xcode-select -p &> /dev/null
+    then
         print_error "Xcode must be intalled, run xcode-select --install"   
         xcode-select --install
     else
@@ -114,7 +116,8 @@ brew_install() {
     fi
 
     # homebrew
-    if [[ ! command -v /opt/homebrew/bin/brew &> /dev/null ]]; then
+    if ! command -v /opt/homebrew/bin/brew &> /dev/null 
+    then
         echo 'brew must be installed! (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")'
     else
         print_msg "Update package database..."
@@ -170,20 +173,13 @@ vim_options() {
     echo
 }
 
+# Specific for GUI Vim
 install_vim() {
-    if [[ ! -e $(command -v Xorg) ]] && [[ ! -e $(command -v startx) ]]; then
-        print_msg "NO GUI, installing vim w/ basic options..."
-        vim_options=1
-
-        return 0
-    fi
-
-    vim_options
-
     # Check if Xorg display server is installed. If true, offer Vim installation
     # options.
     if [[ -e $(command -v Xorg) || -e $(command -v startx) ]]; then
         vim_options
+
         while [ -z "${vim_option}" ]; do
             echo -en "${white}  Option${yellow} [1/2]${white}: ${no_color}"
             read -r opt
@@ -204,10 +200,13 @@ install_vim() {
 font_options() {
     echo -e "${yellow}Options for font installation.${no_color}" >&1
     echo -e "${yellow}  1)${white} None. Do not install any fonts.${no_color}" >&1
-    echo -e "${yellow}  2)${white} Basic. Install the 'JetBrainsMono' and 'SpaceMono' ${no_color}" >&1
+    echo -e "${yellow}  2)${white} Basic. Install the 'SpaceMono' and 'JetBrainsMono' font. ${no_color}" >&1
     echo
 }
 
+# Download fonts under .local/fonts
+# For terminal use  - Space Mono
+# For IDE use       - JetBrains Mono
 install_fonts() {
     font_options
     while [ -z "${font_option}" ]; do
@@ -217,11 +216,8 @@ install_fonts() {
         case "${opt}" in
             [1]*    ) 
                 font_option=1 ;;
-            [2]*    ) 
-                font_option=2; 
-                font_name="JetBrainsMono"                       \
-                font_dir="${LOCAL_DATA_HOME}/fonts/${font_name}"  \
-                font_dl_url="" ;;
+            [2]*    )
+                font_option=2 ;;
             *       ) 
                 echo -e "Invalid option '${opt}'." >&2; \
                 font_options ;;
@@ -230,13 +226,22 @@ install_fonts() {
 
     if [[ "${font_option}" -eq 1 ]]; then
         print_msg "Skipping font installation..."
+        return 0
+    fi
 
-    elif [[ "${font_option}" -eq 2  ]]; then
-
-        mkdir -p "${font_dir}"
-        
-        # Download font family and extract.
+    if [[ "${font_option}" -eq 2  ]]; then
+        print_msg "Downloading SpaceMono fonts..."
+        font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/SpaceMono.zip"
         curl -fLo "${temp_file}" "${font_dl_url}" --progress-bar
+        unzip -j "${temp_file}" "*FontMono*" -d "${temp_dir}"
+        cp "${temp_dir}"/*.ttf $LOCAL_FONTS
+
+        print_msg "Dowloading JetBrainsMono fonts..." 
+        font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
+        curl -fLo "${temp_file}" "${font_dl_url}" --progress-bar
+        unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
+        cp "${temp_dir}"/*.ttf $LOCAL_FONTS
+        return 0
     fi
 }
 
@@ -260,10 +265,9 @@ print_header
 
 # HOME
 cd "$HOME"
-
+install_fonts
 # 1. powerline-fonts @ .local/fonts
 # 2. vim-vundle      @ .vim/bundle
-init_submodules
 
 print_footer
 
