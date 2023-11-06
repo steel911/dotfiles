@@ -1,3 +1,0 @@
-[submodule ".vim/vundle"]
-    path = .vim/bundle
-    url  = https://github.com/powerline/fonts 

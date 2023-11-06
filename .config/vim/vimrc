@@ -1,0 +1,176 @@
+" A modest vimrc
+" Author: Jim Zhao<zjj3065@gmail.com>
+
+" <--- Before ---> vundle#begin() is called
+filetype plugin indent off                                      " required
+autocmd FileType netrw setl bufhidden=delete                    " or use qa!
+
+" Basic Settings
+set nocompatible                                                " `Better safe than sorry`
+set encoding=utf-8                                              " enable utf8
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936        " enable utf8
+set termencoding=utf-8                                          " enable utf8
+set mouse=a                                                     " enable mouse
+set clipboard=unnamed,unnamedplus                               " enable clipboard
+set nowrap                                                      " disable wrapping
+set textwidth=0                                                 " disable text length limit
+set autoread                                                    " reload on external file changes
+set backspace=indent,eol,start                                  " backspace behavior
+set autochdir                                                   " auto changing current pwd
+
+" UI Settings
+set wildmenu wildmode=longest:full,full                         " wildmode behavior
+set term=xterm-256color                                         " colorful terminal
+set nu rnu                                                      " enable line number & relative line number
+set showmatch                                                   " show matching brackets
+set noshowmode                                                  " hide INSERT line, since we have vim-airline
+" set t_ZH=[3m                                                  " override vim's italic codes
+" set t_ZR=[23m                                                 " ^[ must be entered with <C-V><Esc>
+if !has('gui_running')
+    set t_Co=256
+endif
+
+" Search Settings
+set ignorecase smartcase                                        " case options
+set hlsearch incsearch                                          " highlighting
+set path+=**                                                    " Search all subdirectories recursively:w
+
+" Tab & Indentation
+set autoindent expandtab                                        " autoident & tabbing
+set tabstop=4 softtabstop=4 shiftwidth=4                        " 1 tab = 4 spaces
+
+" Undo & Backup
+set nobackup noswapfile nowritebackup                           " disable backup/swap files
+if !isdirectory($HOME."/.vim")
+    call mkdir($HOME."/.vim", "", 0770)
+endif
+if !isdirectory($HOME."/.vim/undo")
+    call mkdir($HOME."/.vim/undo", "", 0700)
+endif
+set undodir=~/.vim/undo                                         " undo options
+set undofile                                                    " undo options
+set undolevels=9999                                             " undo options
+
+" Plugin Settings
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'                                   " Vundle
+Plugin 'preservim/nerdtree'                                     " NERDTREE
+Plugin 'ctrlpvim/ctrlp.vim'                                     " ctrlp
+set rtp+=~/.vim/bundle/ctrlp.vim                                " :help ctrlp.txt
+
+Plugin 'patstockwell/vim-monokai-tasty'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'itchyny/lightline.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'elzr/vim-json'
+
+call vundle#end()                                               " required
+
+" <--- after ---> vundle#end() is called
+filetype plugin indent on                                       " required
+syntax on                                                       " required
+
+" NERD tree settings
+let g:NERDTreeWinSize       = 48
+let g:NERDTreeShowHidden    = 1
+
+" CtrlP Settings
+" FIXME: Ctrl's split display <c-v> is conflict with Termminal's paste <c-v>
+" Delete standard <c-v> keybinding under Windows Terminal.
+let g:ctrlp_map             = '<c-p>'
+let g:ctrlp_cmd             = 'CtrlP'
+let g:ctrlp_max_height      = 24
+let g:ctrlp_showw_hidden    = 1
+let g:ctrlp_work_path_mode  = 'ra'           " Set work directory to cd or cwd
+let g:ctrlp_switch_buffer   = 'et'           " Open it again
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn|repo)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
+" ignore files in .gitignore
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+
+" Better Java syntax highlighting
+let java_highlight_functions = 1
+let java_highlight_all = 1
+
+" Theme Settings
+let g:vim_monokai_tasty_italic = 1                    " allow italics, set this before the colorscheme
+colorscheme vim-monokai-tasty
+
+" Airline
+let g:airline_powerline_fonts = 1
+
+" Optional themes for airline/lightline
+let g:airline_theme='monokai_tasty'                   " airline theme
+let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', ':%3v'])
+let g:airline_section_a = airline#section#create(['paste', 'mode'])
+let g:airline_symbols.paste = 'PASTE - '
+
+function! AirlineInit()
+    call airline#parts#define_raw('linenr', '%l')
+    call airline#parts#define_accent('linenr', 'bold')
+    let g:airline_section_z = airline#section#create(['%3p%%  ',
+                \ g:airline_symbols.linenr .' ', 'linenr', ':%c'])
+endfunction
+
+autocmd VimEnter * call AirlineInit()
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" airline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+hi Search ctermbg=yellow ctermfg=black guibg=yellow guifg=black
+
+" Keybinding Settings
+map <C-n> :NERDTreeToggle<CR>
+nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>             " clear last search highlights
+nnoremap <C-t>      :tabnew<CR>                                 " create a new tab
+nnoremap <C-t>      :tabnew<CR>                                 " create a new tab
+nnoremap <C-h>      :tabprev<CR>                                " go to prev tab
+nnoremap <C-h>      :tabprev<CR>                                " go to prev tab
+nnoremap <C-l>      :tabnext<CR>                                " go to next tab
+nnoremap <C-Left>   :tabm -1<CR>                                " move current tab to prev position
+nnoremap <C-Right>  :tabm +1<CR>                                " move current tab to next position
+
+map <C-j>   :cn<CR>                                             " go to next in quickfix list
+map <C-k>   :cp<CR>                                             " go to previous in quickfix list
+map <C-x>   :q<CR>                                              " close current buffer if nothing happens
+
+" Map <F3> to trigger vimgrep with noautocmd (search faster)
+nnoremap <F3> :noautocmd vimgrep // **/*<c-f>$Bhhi
+
+" Map <F2> to trigger vimgrep with current word
+nnoremap <F2> :vimgrep <cword> %:p:h/*<CR>
+
