@@ -1,0 +1,269 @@
+#!/usr/bin/env bash
+
+# VAIABLES/CONSTANTS ######################################
+git_host="github.com"
+git_user="steel911"
+git_repo="dotfiles"
+git_url="https://${git_host}/${git_user}/"
+
+# Variables for temporary files/directories.
+temp_file="$(mktemp -u)"
+temp_dir="$(mktemp -d)"
+
+# Set working directory
+export LOCAL_DATA_HOME="${HOME}/.local/share"
+
+## Colorize output.
+# shellcheck disable=SC2034
+red="\033[91m"
+# shellcheck disable=SC2034
+green="\033[92m"
+# shellcheck disable=SC2034
+blue="\033[94m"
+# shellcheck disable=SC2034
+yellow="\033[93m"
+# shellcheck disable=SC2034
+white="\033[97m"
+# shellcheck disable=SC2034
+no_color="\033[0m"
+
+# ARRAYS   ################################################
+pkg_list=(
+    "git"
+    "vim"
+    "curl"
+    "tree"
+    "unzip"
+)
+
+# FUNCTIONS ################################################
+print_header() {
+    echo -e "${blue}
+        .___      __    _____.__.__
+      __| _/_____/  |__/ ____\__|  |   ____   ______
+     / __ |/  _ \   __\   __\|  |  | _/ __ \ /  ___/
+    / /_/ (  <_> )  |  |  |  |  |  |_\  ___/ \___\\
+    \____ |\____/|__|  |__|  |__|____/\___  >____  >
+         \/                               \/     \/
+    ${yellow}BOOTSTRAP SCRIPT
+    ${white}${git_url}${git_repo}
+    ${no_color}
+" >&1
+}
+
+print_footer() {
+    echo -e "${blue}
+    Bootstrap of dotfiles completed!${yellow}
+    Log out${blue} and${yellow} login${blue} to apply changes!${white}
+
+    See README for more information;
+    ${git_url}${git_repo}/.github/README.md${no_color}
+" >&1
+}
+
+print_msg() {
+    echo -e "${green}=>${no_color}${white}" "${@}" "${no_color}" >&1
+}
+
+print_error() {
+    echo -e "${red}=> ERROR:${no_color}${white}" "${@}" "${no_color}" >&2
+}
+
+init_submodules() {
+    ~/.local/bin/yadm submodule update --recursive --init
+}
+
+pac_install() {
+    print_msg "Updating package database..."
+    SUDO=''
+
+    # In msys2 we do NOT need sudo
+    if [[ -e $(command -v sudo) ]]; then
+        SUDO='sudo'
+    fi
+    
+    $SUDO pacman -Sy
+    
+    # Vim options
+    vim_gui_pkg="gvim"
+
+    print_msg "Installing package dependencies..."
+    $SUDO pacman -S --noconfirm "${pkg_list[@]}"
+}
+
+deb_install() {
+    print_msg "Updating package database..."
+    sudo apt update
+
+    # Vim options
+    vim_gui_pkg="vim-gtk3"
+
+    print_msg "Installing package dependencies..."
+    sudo apt install --yes "${pkg_list[@]}"
+}
+
+brew_install() {
+    print_msg "Update package database..."
+    
+    # Xcode
+    if [[ ! command -v xcode-select -p &> /dev/null ]]; then
+        print_error "Xcode must be intalled, run xcode-select --install"   
+        xcode-select --install
+    else
+        print_msg "Xcode already installed"
+    fi
+
+    # homebrew
+    if [[ ! command -v /opt/homebrew/bin/brew &> /dev/null ]]; then
+        echo 'brew must be installed! (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")'
+    else
+        print_msg "Update package database..."
+        /opt/homebrew/bin/brew update
+        /opt/homebrew/bin/brew doctor
+    fi
+   
+    print_msg "Installing brew packages..."
+    /opt/homebrew/bin/brew bundle install --file ~/Brewfile
+}
+
+install_pkgs() {
+    # Operating system identification. For more information, see
+    # https://www.freedesktop.org/software/systemd/man/os-release.html
+    if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
+        # shellcheck disable=SC1091
+        [ -f "/etc/os-release" ] && source /etc/os-release
+        case "${NAME}" in
+            *Ubuntu*)
+                print_msg "OS identified as '$NAME'";
+                deb_install
+                ;;
+            *)
+                print_error "Unable to identify operating system! Could not install packages...";
+                exit 1
+                ;;
+        esac
+    elif [[ "${OSTYPE}" == "darwin"* ]]; then
+        brew_install
+    elif [[ "${OSTYPE}" == "msys" ]]; then
+        pac_install
+    else
+        print_error "Unsupported operating system! Could not install packages..."
+        exit 1
+    fi
+}
+
+bash_options() {
+    echo -e "${yellow}Options for bash installation.${no_color}" >&1
+    echo -e "${yellow}  1)${white} Basic. Install standard Vim package.${no_color}" >&1
+    echo -e "${yellow}  2)${white} GUI. Install Vim with GTK3 GUI.${no_color}" >&1
+    echo
+}
+
+install_bash() {
+    echo ""    
+}
+
+vim_options() {
+    echo -e "${yellow}Options for Vim installation.${no_color}" >&1
+    echo -e "${yellow}  1)${white} Basic. Install standard Vim package.${no_color}" >&1
+    echo -e "${yellow}  2)${white} GUI. Install Vim with GTK3 GUI.${no_color}" >&1
+    echo
+}
+
+install_vim() {
+    if [[ ! -e $(command -v Xorg) ]] && [[ ! -e $(command -v startx) ]]; then
+        print_msg "NO GUI, installing vim w/ basic options..."
+        vim_options=1
+
+        return 0
+    fi
+
+    vim_options
+
+    # Check if Xorg display server is installed. If true, offer Vim installation
+    # options.
+    if [[ -e $(command -v Xorg) || -e $(command -v startx) ]]; then
+        vim_options
+        while [ -z "${vim_option}" ]; do
+            echo -en "${white}  Option${yellow} [1/2]${white}: ${no_color}"
+            read -r opt
+            echo
+            case "${opt}" in
+                [1]*) vim_option=1 ;;
+                [2]*) vim_option=2 ;;
+                *) echo -e "Invalid option '${opt}'." >&2; vim_options ;;
+            esac
+        done
+        if [[ "${vim_option}" = 2 ]]; then
+            # Replace standard Vim package with GTK3 GUI version.
+            pkg_list=("${pkg_list[@]/vim/$vim_gui_pkg}")
+        fi
+    fi
+}
+
+font_options() {
+    echo -e "${yellow}Options for font installation.${no_color}" >&1
+    echo -e "${yellow}  1)${white} None. Do not install any fonts.${no_color}" >&1
+    echo -e "${yellow}  2)${white} Basic. Install the 'JetBrainsMono' and 'SpaceMono' ${no_color}" >&1
+    echo
+}
+
+install_fonts() {
+    font_options
+    while [ -z "${font_option}" ]; do
+        echo -en "${white}  Option${yellow} [1/2]${white}: ${no_color}"
+        read -r opt
+        echo
+        case "${opt}" in
+            [1]*    ) 
+                font_option=1 ;;
+            [2]*    ) 
+                font_option=2; 
+                font_name="JetBrainsMono"                       \
+                font_dir="${LOCAL_DATA_HOME}/fonts/${font_name}"  \
+                font_dl_url="" ;;
+            *       ) 
+                echo -e "Invalid option '${opt}'." >&2; \
+                font_options ;;
+        esac
+    done
+
+    if [[ "${font_option}" -eq 1 ]]; then
+        print_msg "Skipping font installation..."
+
+    elif [[ "${font_option}" -eq 2  ]]; then
+
+        mkdir -p "${font_dir}"
+        
+        # Download font family and extract.
+        curl -fLo "${temp_file}" "${font_dl_url}" --progress-bar
+    fi
+}
+
+cleanup_home() {
+    echo ""
+}
+
+update_yadm_repo() {
+    echo ""
+}
+
+cleanup_tmp() {
+    echo ""
+}
+
+
+
+
+# MAIN     ################################################
+print_header
+
+# HOME
+cd "$HOME"
+
+# 1. powerline-fonts @ .local/fonts
+# 2. vim-vundle      @ .vim/bundle
+init_submodules
+
+print_footer
+
