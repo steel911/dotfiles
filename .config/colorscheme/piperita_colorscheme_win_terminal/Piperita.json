@@ -1,0 +1,24 @@
+{
+  "name": "Piperita",
+  "black": "#4c4c4c",
+  "red": "#ff6685",
+  "green": "#a6eba6",
+  "yellow": "#ffdc72",
+  "blue": "#5dc6f5",
+  "purple": "#ff8fff",
+  "cyan": "#86d1d7",
+  "white": "#dbdbdb",
+  "brightBlack": "#737373",
+  "brightRed": "#ffa8ba",
+  "brightGreen": "#c5ebc5",
+  "brightYellow": "#f9f9a5",
+  "brightBlue": "#8ddbff",
+  "brightPurple": "#ffabff",
+  "brightCyan": "#b0f0f0",
+  "brightWhite": "#ffffff",
+  "background": "#000000",
+  "foreground": "#ebebeb",
+  "selectionBackground": "#e6e6e6",
+  "cursorColor": "#bbbbbb"
+}
+

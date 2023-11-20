@@ -1,4 +1,4 @@
-man$include /etc/inputrc
+$include /etc/inputrc
 "\C-p":history-search-backward
 "\C-n":history-search-forward
 
@@ -9,7 +9,7 @@ set bell-style none
 
 # Filename completion/expansion
 set completion-ignore-case On
-set completion-prefix-display-length 3
+# set completion-prefix-display-length 3
 set mark-symlinked-directories On
 set show-all-if-ambiguous On
 set show-all-if-unmodified On

@@ -5,9 +5,9 @@ git_host="github.com"
 git_user="steel911"
 git_repo="dotfiles"
 git_url="https://${git_host}/${git_user}/"
-PROXY="socks5://127.0.0.1:7890"
 BASH_HOME="${HOME}/.config/bash"
 VIM_HOME="${HOME}/.config/vim"
+BREW_HOME="${HOME}/.config/homebrew"
 
 # os_type: msys2, ubuntu, mac
 os_type=""
@@ -121,17 +121,20 @@ brew_install() {
     fi
 
     # homebrew
-    if ! command -v /opt/homebrew/bin/brew &> /dev/null
+    if ! command -v /usr/local/bin/brew &> /dev/null
     then
         echo 'brew must be installed! (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")'
     else
         print_msg "Update package database..."
-        /opt/homebrew/bin/brew update
-        /opt/homebrew/bin/brew doctor
+        /usr/local/bin/brew update
+        /usr/local/bin/brew doctor
     fi
 
     print_msg "Installing brew packages..."
-    /opt/homebrew/bin/brew bundle install --file ~/Brewfile
+    /usr/local/bin/brew bundle install --file "${BREW_HOME}/Brewfile"
+
+    print_msg "Homebrew cleanup..."
+    /usr/local/bin/brew cleanup
 }
 
 detect_os() {
@@ -191,15 +194,22 @@ link_bash_config() {
     # Basic
     ln -sf "${BASH_HOME}/bashrc"            "${HOME}/.bashrc"
     ln -sf "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
+    ln -sf "${BASH_HOME}/inputrc"           "${HOME}/.inputrc"
+    ln -sf "${BASH_HOME}/gitignore"         "${HOME}/.gitignore"
 
     print_msg "Make sure ~/.bashrc.d exists."
-    mkdir -p ~/.bashrc.d
+    mkdir -p "${HOME}/.bashrc.d"
 
     # Detailed
     ln -sf "${BASH_HOME}/bashrc.d/bash_aliases"                 "${HOME}/.bashrc.d/bash_aliases"
     ln -sf "${BASH_HOME}/bashrc.d/bash_completion"              "${HOME}/.bashrc.d/bash_completion"
-    ln -sf "${BASH_HOME}/bashrc.d/bash_colorscheme_piperita"    "${HOME}/.bashr.d/bash_colorschme_piperita"
+    ln -sf "${BASH_HOME}/bashrc.d/git_completion"               "${HOME}/.bashrc.d/git_completion"
+    ln -sf "${BASH_HOME}/bashrc.d/bash_colorscheme_piperita"    "${HOME}/.bashrc.d/bash_colorschme_piperita"
     ln -sf "${BASH_HOME}/bashrc.d/bash_proxy"                   "${HOME}/.bashrc.d/bash_proxy"
+
+    # Git config
+    git config --global core.excludesFile '~/.gitignore'
+    git config --global core.autocrlf input
 
     case "${os_type}" in
         ("ubuntu")
@@ -211,6 +221,8 @@ link_bash_config() {
                 exit 1
             ;;
     esac
+
+    source "${HOME}/.bash_profile"
     print_msg "linking bash configurations... DONE"
 
 }
@@ -219,17 +231,24 @@ copy_bash_config() {
     print_msg "Copying bash configurations... "
 
     # Basic
-    cp -sf "${BASH_HOME}/bashrc"            "${HOME}/.bashrc"
-    cp -sf "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
+    cp "${BASH_HOME}/bashrc"            "${HOME}/.bashrc"
+    cp "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
+    cp "${BASH_HOME}/inputrc"           "${HOME}/.inputrc"
+    cp "${BASH_HOME}/gitignore"         "${HOME}/.gitignore"
 
     print_msg "Make sure ~/.bashrc.d exists."
-    mkdir -p ~/.bashrc.d
+    mkdir -p "${HOME}/.bashrc.d"
 
     # Detailed
     cp "${BASH_HOME}/bashrc.d/bash_aliases"                     "${HOME}/.bashrc.d/bash_aliases"
     cp "${BASH_HOME}/bashrc.d/bash_completion"                  "${HOME}/.bashrc.d/bash_completion"
+    cp "${BASH_HOME}/bashrc.d/git_completion"                   "${HOME}/.bashrc.d/git_completion"
     cp "${BASH_HOME}/bashrc.d/bash_colorscheme_piperita"        "${HOME}/.bashrc.d/bash_colorschme_piperita"
     cp "${BASH_HOME}/bashrc.d/bash_proxy"                       "${HOME}/.bashrc.d/bash_proxy"
+
+    # Git config
+    git config --global core.excludesFile '~/.gitignore'
+    git config --global core.autocrlf input
 
     case "${os_type}" in
         ("msys2")
@@ -243,8 +262,9 @@ copy_bash_config() {
             exit 1
             ;;
     esac
-    print_msg "Copying bash configurations... DONE"
 
+    source "${HOME}/.bash_profile"
+    print_msg "Copying bash configurations... DONE"
 }
 
 install_bash() {
@@ -314,9 +334,9 @@ install_vim() {
 }
 
 font_options() {
-    echo -e "${yellow}Options for font installation.${no_color}" >&1
-    echo -e "${yellow}  1)${white} None. Do not install any fonts.${no_color}" >&1
-    echo -e "${yellow}  2)${white} Basic. Install the 'SpaceMono' and 'JetBrainsMono' font. ${no_color}" >&1
+    echo -e "${yellow}Options for fonts.${no_color}" >&1
+    echo -e "${yellow}  1)${white} None. Do not download any fonts.${no_color}" >&1
+    echo -e "${yellow}  2)${white} Basic. Download the 'SpaceMono' font. ${no_color}" >&1
     echo
 }
 
@@ -351,22 +371,26 @@ install_fonts() {
 
         print_msg "Downloading SpaceMono fonts..."
         font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/SpaceMono.zip"
-        curl -fLo "${temp_file}" "${font_dl_url}" --proxy $PROXY
+        curl -fLo "${temp_file}" "${font_dl_url}"
         unzip -j "${temp_file}" "*FontMono*" -d "${temp_dir}"
-        cp "${temp_dir}"/*.ttf $LOCAL_FONT
+        cp "${temp_dir}"/*.ttf $LOCAL_FONTS
 
         # print_msg "Dowloading JetBrainsMono fonts..."
         # font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
-        # curl -fLo "${temp_file}" "${font_dl_url}" --proxy $PROXY
+        # curl -fLo "${temp_file}" "${font_dl_url}"
         # unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
         # cp "${temp_dir}"/*.ttf $LOCAL_FONTS
         return 0
     fi
 }
 
-git_options() {
-    git config --global user.email "zjj3065@gmail.com"
-    git config --global user.name "steelz"
+cleanup_options() {
+    echo -e "${yellow}
+  Cleanup home directory?${no_color}
+" >&1
+    echo -e "${yellow}  y)${white} Yes. This removes unused dotfiles.${no_color}" >&1
+    echo -e "${yellow}  n)${white} No. Skip this step and leave all existing dotfiles as is.${no_color}" >&1
+    echo
 }
 
 cleanup_home() {
@@ -378,7 +402,9 @@ cleanup_home() {
         ".bash_profile"
         ".bashrc"
         ".bashrc.d"
+        ".inputrc"
         ".gitconfig"
+        ".gitignore"
         ".vimrc"
         ".vim"
         ".viminfo"
@@ -393,6 +419,7 @@ cleanup_home() {
             found=1; break
         fi
     done
+
     # If true, offer to cleanup home directory.
     if [ "${found}" = 1 ]; then
         cleanup_options
@@ -403,14 +430,16 @@ cleanup_home() {
             case "${opt}" in
                 [y]|[Y]*) cleanup_option=1 ;;
                 [n]|[N]*) cleanup_option=2 ;;
-                *) echo -e "Invalid option '${opt}'." >&2; cleanup_options ;;
+                (*) echo -e "Invalid option '${opt}'." >&2;
+                    cleanup_options
+                    ;;
             esac
         done
         if [ "${cleanup_option}" = 1 ]; then
             print_msg "Cleaning home directory..."
             # Cleanup user's home directory.
             for file in "${dotfiles[@]}"; do
-                [ -e "${HOME}/${file}" ] && rm -ri "${HOME:?}/${file}"
+                [ -e "${HOME}/${file}" ] && rm -rf "${HOME:?}/${file}"
             done
         fi
     fi
@@ -421,11 +450,10 @@ print_header
 
 # HOME
 cd "$HOME"
-# cleanup_home
-# install_pkgs
-# install_bash
-# install_fonts
+cleanup_home
+install_bash
+install_pkgs
+install_fonts
 install_vim
-
 
 print_footer

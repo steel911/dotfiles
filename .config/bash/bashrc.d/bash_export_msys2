@@ -3,13 +3,9 @@
 #
 export LC_ALL=en_US.UTF-8                                                   # Text Encoding
 export EDITOR=vim                                                           # Default editor is VIM
+export VISUAL=vim                                                           # C-X, C-E will VISUAL a tmp file in VIM
+export LSCOLORS=ExFxBxDxCxegedabagacad                                      # Set ls colors
 export LESSHISTFILE=-                                                       # Disable less history file
-
-#
-# PATH
-#
-export PATH=$PATH:$ANDROID_PLATFORM_TOOLS:$JAVA_HOME:$VSCODE:$WINDOWS_GIT
-export PATH=.:$PATH                                                         # Avoid to append "./" every time
 
 #
 # PC ONLY
@@ -18,3 +14,10 @@ export ANDROID_SDK_ROOT="/c/Dev/android-sdk"
 export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_ROOT/platform-tools"
 export VSCODE="/c/Users/$USER/AppData/Local/Programs/Microsoft VS Code/bin"
 export WINDOWS_GIT="/c/Program Files/Git/mingw64/bin"
+
+#
+# PATH
+#
+export PATH=$PATH:$ANDROID_PLATFORM_TOOLS:$JAVA_HOME:$VSCODE:$WINDOWS_GIT
+export PATH=.:$PATH                                                         # Avoid to append "./" every time
+

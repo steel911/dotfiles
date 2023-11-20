@@ -103,3 +103,4 @@ prompt_cmd () {
 PROMPT_COMMAND='prompt_cmd'
 
 export CLICOLOR=1
+
