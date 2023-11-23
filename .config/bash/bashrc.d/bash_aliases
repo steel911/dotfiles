@@ -1,5 +1,5 @@
 # Default to human readable figures
-alias df='di -h'
+alias df='df -h'
 alias du='du -h'
 
 # vim
