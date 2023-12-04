@@ -16,7 +16,7 @@ set nowrap                                                      " disable wrappi
 set textwidth=0                                                 " disable text length limit
 set autoread                                                    " reload on external file changes
 set backspace=indent,eol,start                                  " backspace behavior
-set autochdir                                                   " auto changing current pwd
+set noautochdir                                                 " auto changing current pwd
 
 " UI Settings
 set wildmenu wildmode=longest:full,full                         " wildmode behavior
