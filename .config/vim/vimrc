@@ -60,7 +60,7 @@ Plugin 'preservim/nerdtree'                                     " NERDTREE
 Plugin 'ctrlpvim/ctrlp.vim'                                     " ctrlp
 set rtp+=~/.vim/bundle/ctrlp.vim                                " :help ctrlp.txt
 
-Plugin 'patstockwell/vim-monokai-tasty'
+Plugin 'steel911/vim-monokai-tasty'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'itchyny/lightline.vim'
@@ -112,6 +112,7 @@ let g:airline_powerline_fonts = 1
 
 " Optional themes for airline/lightline
 let g:airline_theme='monokai_tasty'                   " airline theme
+let g:lightline = { 'colorscheme': 'monokai_tasty'}   " lightline theme
 let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', ':%3v'])
 let g:airline_section_a = airline#section#create(['paste', 'mode'])
 let g:airline_symbols.paste = 'PASTE - '
