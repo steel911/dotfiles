@@ -3,7 +3,7 @@
 # Script to install Steel911's dotfiles
 #
 yadm_url="https://github.com/TheLocehiliosan/yadm/raw/master/yadm"
-yadm_local_bin="/usr/local/bin/yadm"
+yadm_local_bin="~/.local/bin/yadm"
 
 # Shortcuts at hand
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -38,24 +38,24 @@ proxy_options() {
 # For terminal use  - Space Mono
 # For IDE use       - JetBrains Mono
 install_yadm() {
-    mkdir -p /usr/local/bin
+    mkdir -p ~/.local/bin
     curl -fLo "${yadm_local_bin}" "${yadm_url}" && chmod a+x "${yadm_local_bin}"
 }
 
 # Main
 print_msg "Dotfiles setup begins."
 
-print_msg "Downloading yadm into /usr/local/bin..."
+print_msg "Downloading yadm into ~/.local/bin..."
 install_yadm
 
-print_msg "Cleaning ~/.config"
-rm -rf $HOME/.config
+# print_msg "Cleaning ~/.config"
+# rm -rf $HOME/.config
 
 print_msg "Copy Dotfiles to $HOME/.config"
 cd $GIT_ROOT && cp -r .config "${HOME}"
 
 # Clone and bootstrap dotfiles repository
-yadm bootstrap
+~/.local/bin/yadm bootstrap
 
 print_msg "Dotfiles setup completed!"
 print_msg "Fonts has to be installed manually, @ ~/.local/fonts"

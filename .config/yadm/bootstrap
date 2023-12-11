@@ -171,9 +171,9 @@ install_pkgs() {
     fi
 
     case "${os_type}" in
-#        ("msys2")   pac_install     ;;
-        ("ubuntu")  deb_install     ;;
-        ("mac")     brew_install    ;;
+        ("msys2")   print_msg "All pkg preinstalled"    ;;
+        ("ubuntu")  deb_install                         ;;
+        ("mac")     brew_install                        ;;
         (*)
             print_error "Unsupported OS!!!"
             exit 1
