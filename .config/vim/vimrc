@@ -10,7 +10,7 @@ set nocompatible                                                " `Better safe t
 set encoding=utf-8                                              " enable utf8
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936        " enable utf8
 set termencoding=utf-8                                          " enable utf8
-set mouse=a                                                     " enable mouse
+set mouse=v                                                     " enable mouse
 set clipboard=unnamed,unnamedplus                               " enable clipboard
 set nowrap                                                      " disable wrapping
 set textwidth=0                                                 " disable text length limit
