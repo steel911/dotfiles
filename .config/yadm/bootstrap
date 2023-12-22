@@ -336,12 +336,12 @@ install_vim() {
 font_options() {
     echo -e "${yellow}Options for fonts.${no_color}" >&1
     echo -e "${yellow}  1)${white} None. Do not download any fonts.${no_color}" >&1
-    echo -e "${yellow}  2)${white} Basic. Download the 'SpaceMono' font. ${no_color}" >&1
+    echo -e "${yellow}  2)${white} Basic. Download the 'Hack' font. ${no_color}" >&1
     echo
 }
 
 # Download fonts under .local/fonts
-# For terminal use  - Space Mono
+# For terminal use  - Hack 
 # For IDE use       - JetBrains Mono
 install_fonts() {
     font_options
@@ -369,8 +369,8 @@ install_fonts() {
         # make sure local font dir is ready.
         mkdir -p ~/.local/fonts
 
-        print_msg "Downloading SpaceMono fonts..."
-        font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/SpaceMono.zip"
+        print_msg "Downloading Hack fonts..."
+        font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.zip"
         curl -fLo "${temp_file}" "${font_dl_url}"
         unzip -j "${temp_file}" "*FontMono*" -d "${temp_dir}"
         cp "${temp_dir}"/*.ttf $LOCAL_FONTS
