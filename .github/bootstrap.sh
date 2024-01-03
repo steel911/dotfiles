@@ -35,17 +35,20 @@ proxy_options() {
 }
 
 # Download fonts under .local/fonts
-# For terminal use  - Space Mono
+# For terminal use  - Hack 
 # For IDE use       - JetBrains Mono
 install_yadm() {
     mkdir -p ~/.local/bin
-    curl -fLo "${yadm_local_bin}" "${yadm_url}" && chmod a+x "${yadm_local_bin}"
+    # curl -fLo "${yadm_local_bin}" "${yadm_url}" && chmod a+x "${yadm_local_bin}"
+   
+    cd $SCRIPT_DIR && cp ./bin/yadm "${yadm_local_bin}" && chmod a+x "${yadm_local_bin}"
 }
 
 # Main
 print_msg "Dotfiles setup begins."
 
-print_msg "Downloading yadm into ~/.local/bin..."
+# print_msg "Downloading yadm into ~/.local/bin..."
+print_msg "Copy yadm into ~/.local/bin"
 install_yadm
 
 # print_msg "Cleaning ~/.config"
