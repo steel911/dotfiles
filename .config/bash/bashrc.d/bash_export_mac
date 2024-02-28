@@ -7,17 +7,38 @@ export VISUAL=vim                                                           # C-
 export LSCOLORS=ExFxBxDxCxegedabagacad                                      # Set ls colors
 export LESSHISTFILE=-                                                       # Disable less history file
 
+#
+# JDK
+#
+# OpenJDK provided by Homebrew
+# List installed JDK version
+# /usr/libexec/java_home -X
+export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+export PATH="/usr/local/opt/openjdk@17/bin:$PATH"
+
+export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+alias java11='export JAVA_HOME=$Java_11_HOME'
+
+export JAVA_17_HOME=$(/usr/libexec/java_home -v17)
+alias java17='export JAVA_HOME=$Java_17_HOME'
+
+# Default to OpenJDK 17
+java17
+
 # Homebrew Tsinghua Repo
 #
 # Mac ONLY
 #
+export HOMEBREW_API_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
 export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
 export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
-export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+export HOMEBREW_PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"
 
 #
 # PATH
 #
-export PATH=$PATH:/usr/local/sbin
+export PATH="/usr/local/sbin:/usr/local/bin:/bin:/sbin:/usr/bin:$PATH"
 export PATH=.:$PATH                                                         # Avoid to append "./" every time
-
