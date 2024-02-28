@@ -1,9 +1,20 @@
 # Source bash completion if installed
 
-# macOS 
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+#
+# macOS
+#
+# bash-completion which requires bash 3.2+
+# macOS shipped with bash 3.2
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
 
+# bash-completion@2 which requires bash 4.2+
+# [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+#
 # Ubuntu
+#
 if [ -f /etc/profile.d/bash_completion ]; then
   source /etc/profile.d/bash_completion
 fi
