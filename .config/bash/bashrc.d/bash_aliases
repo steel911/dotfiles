@@ -6,14 +6,19 @@ alias du='du -h'
 alias vi='vim'
 
 # MISC
-alias less='less -r'                # raw control characters
-alias whence='type -a'              # where, of a sort
+alias less='less -r'                 # raw control characters
+alias whence='type -a'               # where, of a sort
 alias grep='grep --color'            # show differences in color
-alias egrep='egrep --color=auto'    # show differences in color
-alias fgrep='fgrep --color=auto'    # show differences in color
+alias egrep='egrep --color=auto'     # show differences in color
+alias fgrep='fgrep --color=auto'     # show differences in color
+alias wget='wget --no-hsts'          # do not keep wget history
 
 # Better directory listing
 alias ls='ls -hF --color=tty'                   # classify files in color
 alias ll='ls -al'
 alias la='ls -A'
 alias l='ls -CF'
+
+# adb
+alias adbs='adb -host shell'
+alias adbl='adb -host logcat'
