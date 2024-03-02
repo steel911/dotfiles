@@ -18,6 +18,6 @@ export WINDOWS_GIT="/c/Program Files/Git/mingw64/bin"
 #
 # PATH
 #
-export PATH=$PATH:$ANDROID_PLATFORM_TOOLS:$JAVA_HOME:$VSCODE:$WINDOWS_GIT
+export PATH=$ANDROID_PLATFORM_TOOLS:$JAVA_HOME:$VSCODE:$WINDOWS_GIT:$PATH
 export PATH=.:$PATH                                                         # Avoid to append "./" every time
 
