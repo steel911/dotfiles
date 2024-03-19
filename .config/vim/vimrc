@@ -17,6 +17,7 @@ set textwidth=0                                                 " disable text l
 set autoread                                                    " reload on external file changes
 set backspace=indent,eol,start                                  " backspace behavior
 set noautochdir                                                 " auto changing current pwd
+set viminfofile=NONE						" disable auto creating viminfo file completely
 
 " UI Settings
 set wildmenu wildmode=longest:full,full                         " wildmode behavior
