@@ -1,0 +1,12 @@
+# General
+.DS_Store
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+
