@@ -3,7 +3,7 @@
 # Script to install Steel911's dotfiles
 #
 yadm_url="https://github.com/TheLocehiliosan/yadm/raw/master/yadm"
-local_bin="~/.local/bin"
+local_bin=".local/bin"
 
 # Shortcuts at hand
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -34,14 +34,11 @@ proxy_options() {
     echo
 }
 
-# Download fonts under .local/fonts
-# For terminal use  - Hack
-# For IDE use       - JetBrains Mono
 install_yadm() {
-    mkdir -p "${local_bin}"
-    chmod -R 755 "${local_bin}"
+    mkdir -p "$HOME/${local_bin}"
+    chmod -R 755 "$HOME/${local_bin}"
 
-    cd $SCRIPT_DIR && cp bin/yadm "${local_bin}/yadm" && chmod a+x "${local_bin}/yadm"
+    cd $SCRIPT_DIR && cp bin/yadm "$HOME/${local_bin}/yadm" && chmod a+x "$HOME/${local_bin}/yadm"
 }
 
 # Main

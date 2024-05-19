@@ -326,7 +326,7 @@ install_vim() {
 
     print_msg "Downloading Vim Vundle, into ~/.vim/bundle/Vundle.vim"
     vim_vundle_src="https://github.com/VundleVim/Vundle.vim.git"
-    vim_vundle_dst="${HOME}/.vim/bundle/Vundle.vim"
+    vim_vundle_dst="$HOME/.vim/bundle/Vundle.vim"
     git clone "${vim_vundle_src}" "${vim_vundle_dst}"
 
     print_msg "Install all vim plugins..."
@@ -341,7 +341,7 @@ font_options() {
 }
 
 # Download fonts under .local/fonts
-# For terminal use  - Hack 
+# For terminal use  - Hack
 # For IDE use       - JetBrains Mono
 install_fonts() {
     font_options
