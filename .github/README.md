@@ -19,7 +19,7 @@ including:
 2. bashrc
 3. inputrc
 4. bashrc.d/*
-5. .tmux.conf (Ubuntu & MacOS)
+5. .tmux.conf (Ubuntu & macOS)
 
 ## Theme
 For terminal ColorScheme, I used a customized theme called piperita.
@@ -37,10 +37,12 @@ with:
 4. Airline  - Kind of neat looking statusbar
 
 ## Fonts
-bootstrap.sh will try to download Space Mono w/ Powerline patched.
+bootstrap.sh will NOT install any font, please choose your favourite fonts.
+However, Monaco is recommended with this setup.
 
-- Monaco Nerd for Terminal use.
-- JetBrains Mono for IDE use.
+- Monaco Nerd for Terminal use, included under ~/.config/dotfiles/.github/fonts.
+- Hack Nerd for backup, included under ~/.config/dotfiles/.github/fonts.
+- JetBrains Mono for IDE use, not included in this repo.
 
 ## Others
 - gitignore

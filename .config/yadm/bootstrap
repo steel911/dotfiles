@@ -381,11 +381,11 @@ install_fonts() {
         unzip -j "${temp_file}" "*FontMono*" -d "${temp_dir}"
         cp "${temp_dir}"/*.ttf $LOCAL_FONTS
 
-        # print_msg "Dowloading JetBrainsMono fonts..."
-        # font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
-        # curl -fLo "${temp_file}" "${font_dl_url}"
-        # unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
-        # cp "${temp_dir}"/*.ttf $LOCAL_FONTS
+        print_msg "Dowloading JetBrainsMono fonts..."
+        font_dl_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
+        curl -fLo "${temp_file}" "${font_dl_url}"
+        unzip -j "${temp_file}" "JetBrainsMonoNerdFontMono*" -d "${temp_dir}"
+        cp "${temp_dir}"/*.ttf $LOCAL_FONTS
         return 0
     fi
 }
@@ -460,7 +460,7 @@ cd "$HOME"
 cleanup_home
 install_bash
 install_pkgs
-install_fonts
+# install_fonts
 install_vim
 
 print_footer

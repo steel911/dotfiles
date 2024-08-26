@@ -58,4 +58,4 @@ cd $GIT_ROOT && cp -r .config "${HOME}"
 ~/.local/bin/yadm bootstrap
 
 print_msg "Dotfiles setup completed!"
-print_msg "Fonts has to be installed manually, @ ~/.local/fonts"
+print_msg "Fonts has to be installed manually, @ ~/.config/dotfiles/.github/fonts"
