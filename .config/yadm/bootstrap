@@ -196,6 +196,7 @@ link_bash_config() {
     ln -sf "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
     ln -sf "${BASH_HOME}/inputrc"           "${HOME}/.inputrc"
     ln -sf "${BASH_HOME}/gitignore"         "${HOME}/.gitignore"
+    ln -sf "${BASH_HOME}/tmux.conf"         "${HOME}/.tmux.conf"
 
     print_msg "Make sure ~/.bashrc.d exists."
     mkdir -p "${HOME}/.bashrc.d"
@@ -252,11 +253,16 @@ copy_bash_config() {
 
     case "${os_type}" in
         ("msys2")
-            cp "${BASH_HOME}/bashrc.d/bash_export_msys2"        "${HOME}/.bashrc.d/bash_export" ;;
+            cp "${BASH_HOME}/bashrc.d/bash_export_msys2"        "${HOME}/.bashrc.d/bash_export" 
+            ;;
         ("ubuntu")
-            cp "${BASH_HOME}/bashrc.d/bash_export_ubuntu"       "${HOME}/.bashrc.d/bash_export" ;;
+            cp "${BASH_HOME}/bashrc.d/bash_export_ubuntu"       "${HOME}/.bashrc.d/bash_export" 
+            cp "${BASH_HOME}/bash/tmux.conf"                    "${HOME}/.tmux.config" 
+            ;;
         ("mac")
-            cp "${BASH_HOME}/bashrc.d/bash_export_mac"          "${HOME}/.bashrc.d/bash_export" ;;
+            cp "${BASH_HOME}/bashrc.d/bash_export_mac"          "${HOME}/.bashrc.d/bash_export"
+            cp "${BASH_HOME}/bash/tmux.conf"                    "${HOME}/.tmux.config" 
+            ;;
         (*)
             print_error "Unsupported OS!!!"
             exit 1
@@ -410,10 +416,11 @@ cleanup_home() {
         ".viminfo"
         ".wget-hsts"
         ".lesshst"
+        ".tmux.conf"
     )
 
     found=0 # Set to 1 if file found in the for loop.
-    # Find any pre-esisting dotfiles.
+    # Find any pre-existing dotfiles.
     for file in "${dotfiles[@]}"; do
         if [ -e "${HOME}/${file}" ]; then
             found=1; break

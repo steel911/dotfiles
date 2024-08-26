@@ -3,8 +3,8 @@
 > For PC, both msys2 and MinGW is tested.
 
 ## Install
-1. Clone this repo under ~/Downloads
-2. Run bootstap.sh
+1. Clone this repo under ~/.config
+2. Run ~/.config/dotfiles/.github/bootsrtap.sh
 3. Open a new Terminal Window
 
 
@@ -19,7 +19,7 @@ including:
 2. bashrc
 3. inputrc
 4. bashrc.d/*
-
+5. .tmux.conf (Ubuntu & MacOS)
 
 ## Theme
 For terminal ColorScheme, I used a customized theme called piperita.
@@ -39,7 +39,7 @@ with:
 ## Fonts
 bootstrap.sh will try to download Space Mono w/ Powerline patched.
 
-- Space Mono for Terminal use.
+- Monaco Nerd for Terminal use.
 - JetBrains Mono for IDE use.
 
 ## Others

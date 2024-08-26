@@ -22,3 +22,22 @@ alias l='ls -CF'
 # adb
 alias adbs='adb -host shell'
 alias adbl='adb -host logcat'
+
+if [[ $OSTYPE == "linux-gnu"* ]]; then
+   # linux version of pbcopy & pbpaste 
+   alias pbcopy='xclip -selection clipboard'
+   alias pbpaste='xclip -selection clipboard -o'
+fi
+
+# tat: tmux attach
+function tat {
+  name=$(basename `pwd` | sed -e 's/\.//g')
+
+  if [ tmux ls 2>&1 | grep '$name' ]; then
+    tmux attach -t '$name'
+  elif [ -f .envrc ]; then
+    direnv exec / tmux new-session -s '$name'
+  else
+    tmux new-session -s '$name'
+  fi
+}
