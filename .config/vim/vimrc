@@ -157,7 +157,11 @@ hi Search ctermbg=yellow ctermfg=black guibg=yellow guifg=black
 
 " Keybinding Settings
 map <C-n> :NERDTreeToggle<CR>
-nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>             " clear last search highlights
+
+" Clear highlighting on escape in normal mode
+nnoremap <esc> :noh<return><esc>
+nnoremap <esc>^[ <esc>^[
+
 nnoremap <C-t>      :tabnew<CR>                                 " create a new tab
 nnoremap <C-t>      :tabnew<CR>                                 " create a new tab
 nnoremap <C-h>      :tabprev<CR>                                " go to prev tab
