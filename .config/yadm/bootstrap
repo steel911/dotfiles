@@ -302,6 +302,12 @@ link_vim_config() {
     print_msg "Linking vim configurations..."
     ln -sf "${VIM_HOME}/vimrc"            "${HOME}/.vimrc"
 
+    print_msg "Linking vsvim configurations for Visual Studio..."
+    ln -sf "${VIM_HOME}/vsvimrc"            "${HOME}/.vsvimrc"
+
+    print_msg "Linking ideavim configurations for JetBrains IDEs..."
+    ln -sf "${VIM_HOME}/ideavimrc"            "${HOME}/.ideavimrc"
+
     print_msg "Make sure ~/.vim exists."
     mkdir -p "${HOME}/.vim"
 }
@@ -309,6 +315,12 @@ link_vim_config() {
 copy_vim_config() {
     print_msg "Copying vim configurations..."
     cp "${VIM_HOME}/vimrc"              "${HOME}/.vimrc"
+
+    print_msg "Copying vsvim configurations for Visual Studio..."
+    cp "${VIM_HOME}/vsvimrc"              "${HOME}/.vsvimrc"
+
+    print_msg "Copying ideavim configurations for JetBrains IDEs..."
+    cp "${VIM_HOME}/ideavimrc"              "${HOME}/.ideavimrc"
 
     print_msg "Make sure ~/.vim exists."
     mkdir -p "${HOME}/.vim"

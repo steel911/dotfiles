@@ -1,0 +1,33 @@
+" Basic Settings
+set mouse=v                                                     " enable mouse
+set surround
+set visualbell
+
+" Basic
+set nu rnu                                                      " enable line number & relative line number
+set showmatch                                                   " show matching brackets
+set showmode
+
+" Search Settings
+set ignorecase smartcase                                        
+set incsearch hlsearch
+
+" Tab & Indentation
+set autoindent expandtab                                        " autoident & tabbing
+set tabstop=4 softtabstop=4 shiftwidth=4                        " 1 tab = 4 spaces
+
+" Keybinding Settings
+nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>             " clear last search highlights
+nnoremap <C-t> :tabnew<CR>                                      " create a new tab
+nnoremap <C-h> :tabprev<CR>                                     " go to prev tab
+nnoremap <C-l> :tabnext<CR>                                     " go to next tab
+nnoremap <C-A-h>  :tabm -1<CR>                                  " move current tab to prev position
+nnoremap <C-A-l>  :tabm +1<CR>                                  " move current tab to next position
+
+map <C-j>   :cn<CR>                                             " go to next in quickfix list
+map <C-k>   :cp<CR>                                             " go to previous in quickfix list
+map <C-x>   :q<CR>                                              " close current buffer if nothing happens
+
+" Map <F3> to trigger vimgrep with noautocmd (search faster)
+nnoremap <F3> :noautocmd vimgrep // **/*<c-f>$Bhhi
+
