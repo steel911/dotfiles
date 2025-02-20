@@ -17,7 +17,9 @@ set autoindent expandtab                                        " autoident & ta
 set tabstop=4 softtabstop=4 shiftwidth=4                        " 1 tab = 4 spaces
 
 " Keybinding Settings
-nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>             " clear last search highlights
+" Clear highlighting on escape in normal mode
+nnoremap <esc> :noh<return><esc>
+nnoremap <esc>^[ <esc>^[
 nnoremap <C-h> :tabprev<CR>                                     " go to prev tab
 nnoremap <C-l> :tabnext<CR>                                     " go to next tab
 
