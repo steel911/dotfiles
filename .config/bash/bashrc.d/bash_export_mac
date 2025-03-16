@@ -16,8 +16,8 @@ export LESSHISTFILE=-                                                       # Di
 export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 export PATH="/usr/local/opt/openjdk@17/bin:$PATH"
 
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
-alias java11='export JAVA_HOME=$Java_11_HOME'
+export JAVA_21_HOME=$(/usr/libexec/java_home -v21)
+alias java11='export JAVA_HOME=$Java_21_HOME'
 
 export JAVA_17_HOME=$(/usr/libexec/java_home -v17)
 alias java17='export JAVA_HOME=$Java_17_HOME'
