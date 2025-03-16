@@ -22,11 +22,6 @@ nnoremap <esc> :noh<return><esc>
 nnoremap <esc>^[ <esc>^[
 nnoremap <C-h> :tabprev<CR>                                     " go to prev tab
 nnoremap <C-l> :tabnext<CR>                                     " go to next tab
+nnoremap <C-x>   :q<CR>
 
-map <C-j>   :cn<CR>                                             " go to next in quickfix list
-map <C-k>   :cp<CR>                                             " go to previous in quickfix list
-map <C-x>   :q<CR>                                              " close current buffer if nothing happens
-
-" Map <F3> to trigger vimgrep with noautocmd (search faster)
-nnoremap <F3> :noautocmd vimgrep // **/*<c-f>$Bhhi
 
