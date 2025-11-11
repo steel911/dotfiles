@@ -40,7 +40,10 @@ pkg_list=(
     "curl"
     "wget"
     "tree"
+    "xclip"
     "unzip"
+    "unar"
+    "net-tools"
 )
 
 # FUNCTIONS ################################################
@@ -196,7 +199,13 @@ link_bash_config() {
     ln -sf "${BASH_HOME}/bash_profile"      "${HOME}/.bash_profile"
     ln -sf "${BASH_HOME}/inputrc"           "${HOME}/.inputrc"
     ln -sf "${BASH_HOME}/gitignore"         "${HOME}/.gitignore"
-    ln -sf "${BASH_HOME}/tmux.conf"         "${HOME}/.tmux.conf"
+
+    uname_out="$(uname -s)"
+    case "${uname_out}" in
+        Linux*)     ln -sf "${BASH_HOME}/tmux.linux.conf"   "${HOME}/.tmux.conf";;
+        Darwin*)    ln -sf "${BASH_HOME}/tmux.mac.conf"     "${HOME}/.tmux.conf";;
+        *)          ln -sf "${BASH_HOME}/tmux.linux.conf"   "${HOME}/.tmux.conf";;
+    esac
 
     print_msg "Make sure ~/.bashrc.d exists."
     mkdir -p "${HOME}/.bashrc.d"
