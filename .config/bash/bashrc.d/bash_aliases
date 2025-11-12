@@ -30,14 +30,5 @@ if [[ $OSTYPE == "linux-gnu"* ]]; then
 fi
 
 # tat: tmux attach
-function tat {
-  name=$(basename `pwd` | sed -e 's/\.//g')
+alias 'ta'='tmux new-session -A -s "$(basename $PWD) $(echo $PWD | shasum -a 256 | cut -c1-4)"'
 
-  if [ tmux ls 2>&1 | grep '$name' ]; then
-    tmux attach -t '$name'
-  elif [ -f .envrc ]; then
-    direnv exec / tmux new-session -s '$name'
-  else
-    tmux new-session -s '$name'
-  fi
-}
