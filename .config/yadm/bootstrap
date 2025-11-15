@@ -159,8 +159,8 @@ detect_os() {
     elif [[ "${OSTYPE}" == "darwin"* ]]; then
         print_msg "OS identified as Mac"
         os_type="mac"
-    elif [[ "${OSTYPE}" == "msys"* ]]; then
-        print_msg "OS identified as PC w/ MSYS2"
+    elif [[ "${OSTYPE}" == "msys"* || "${OSTYPE}" == "cygwin"* ]]; then
+        print_msg "OS identified as PC"
         os_type="msys2"
     else
         print_error "Unsupported OS!!!"
