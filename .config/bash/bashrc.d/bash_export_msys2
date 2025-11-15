@@ -2,6 +2,7 @@
 # BASH ENV
 #
 export LC_ALL=en_US.UTF-8                                                   # Text Encoding
+export LANG=en_US.UTF-8
 export EDITOR=vim                                                           # Default editor is VIM
 export VISUAL=vim                                                           # C-X, C-E will VISUAL a tmp file in VIM
 export LSCOLORS=ExFxBxDxCxegedabagacad                                      # Set ls colors
