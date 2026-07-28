@@ -30,5 +30,8 @@ if [[ $OSTYPE == "linux-gnu"* ]]; then
 fi
 
 # tat: tmux attach
-alias 'ta'='tmux new-session -A -s "$(basename $PWD) $(echo $PWD | shasum -a 256 | cut -c1-4)"'
+alias 'tat'='tmux new-session -A -s "$(basename $PWD) $(echo $PWD | shasum -a 256 | cut -c1-4)"'
+
+# pullall: git pull all sub directories
+alias pullall='find . -maxdepth 1 -type d -exec test -d "{}/.git" \; -print -exec git -C {} pull --rebase \;'
 

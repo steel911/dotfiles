@@ -7,6 +7,9 @@ export EDITOR=vim                                                           # De
 export VISUAL=vim                                                           # C-X, C-E will VISUAL a tmp file in VIM
 export LSCOLORS=ExFxBxDxCxegedabagacad                                      # Set ls colors
 export LESSHISTFILE=-                                                       # Disable less history file
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                            # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"          # This loads nvm bash_completion
 
 # CUDA
 if [ -d $HOME/.local/bin ]; then
@@ -23,8 +26,14 @@ if [ -d $CUDA_HOME/lib64 ]; then
         export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 fi
 
+export ANDROID_SDK_ROOT="$HOME/Dev/android-sdk"
+export ANDROID_HOME="$HOME/Dev/android-sdk"
+export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_ROOT/platform-tools"
+export ANDROID_CMDLINE_TOOLS="$ANDROID_HOME/cmdline-tools/latest/bin"
+
 #
 # PATH
 #
-export PATH="~/.local/bin:$PATH"
+export PATH="~/.local/bin:$ANDROID_PLATFORM_TOOLS:$ANDROID_CMDLINE_TOOLS:$PATH"
 export PATH=.:$PATH                                                         # Avoid to append "./" every time
+
